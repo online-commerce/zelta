@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zelta</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <link rel="stylesheet" href="sign-in-style.css">
+    
+</head>
+
+<body>
+
+    <div class="container">
+       
+        <h2 class="title">ZELTA</h2>
+            <form class="login-form">
+                
+                <div class="field" id="advice">Enter the code of a friend to be allowed to join the community</div>
+                <div id="wrong-code" >This code is linked to any account</div>
+                <div id="to-soon-code">This code is linked to an account that joined the comunity less than 5 days ago. Wait until it makes more than 5 days</div>
+                    <input id="code" type="text" placeholder="ex: 12345678" />
+                    
+
+                <button class="login-button" onclick="sendErrorMsg()" id="sendButton">Join</button>
+                
+                    
+
+               
+            </form>
+        
+        </div>
+    <script>
+        function sendErrorMsg() {
+        event.preventDefault();
+        const code = document.getElementById('code').value;
+        const wrongCode = document.getElementById('wrong-code')
+        const toSoonCode = document.getElementById('to-soon-code')
+        if(code==="56891209"){
+            toSoonCode.style.display = toSoonCode.style.display === 'block'? 'none' : 'block';
+            wrongCode.style.display = wrongCode.style.display === 'block'? 'none' : 'none';
+  
+        }else{
+            wrongCode.style.display = wrongCode.style.display === 'block'? 'none' : 'block';
+            toSoonCode.style.display = toSoonCode.style.display === 'block'? 'none' : 'none';
+        }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zelta</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <link rel="stylesheet" href="login-style.css">
+    
+</head>
+
+<body>
+    <a href="index.html" class="back-button"><</a>
+    
+    <div class="container">
+       
+            
+            <form class="login-form">
+                
+                <div id="wrong-account" >The password or the name are not registrered</div>
+                <input id="code" type="text" placeholder="Name" />
+                <input id="code" type="password" placeholder="Password" />
+                    
+
+                <button class="login-button" onclick="sendErrorMsg()" id="sendButton">Join</button>
+                
+                    
+
+               
+            </form>
+        
+        </div>
+    <script>
+        function sendErrorMsg() {
+        event.preventDefault();
+        
+        const wrongAccount = document.getElementById('wrong-account')
+        wrongAccount.style.display = wrongAccount.style.display === 'block'? 'none' : 'block';
+        
+        
+        }
+    </script>
+</body>
+
+</html>
