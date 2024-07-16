@@ -25,6 +25,52 @@
     <div class="button-container">
 
 </div>
+        <script>
+  async function getIpClient() {
+    try {
+      const response = await axios.get('https://ipinfo.io/json');
+      return response.data.ip; // Return the IP address
+    } catch (error) {
+      console.error(error);
+      return null; // Return null if there's an error
+    }
+  }
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD-IOULsrU9K7U9ASa74Wlpu_zfk3FBwuI",
+    authDomain: "data-transfert-dc397.firebaseapp.com",
+    databaseURL: "https://data-transfert-dc397-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "data-transfert-dc397",
+    storageBucket: "data-transfert-dc397.appspot.com",
+    messagingSenderId: "769173749251",
+    appId: "1:769173749251:web:ffa9a302f46c9fee471836",
+    measurementId: "G-ZBRMKEPHYP"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  
+  const database = firebase.database();
+
+  getIpClient().then(ip => {
+    if (!ip) {
+      console.error("Erreur de récupération de l'IP:");
+      return;
+    }
+    // Send IP address to Firebase
+    const ipRef = database.ref('/ip-addresses');
+    ipRef.push({
+      ip: ip
+    })
+     .then(() => {
+        console.log("IP address sent to Firebase.");
+      })
+     .catch((error) => {
+        console.error("Error sending IP address to Firebase:", error);
+      });
+  }).catch(error => {
+    console.error("Erreur de récupération de l'IP:", error);
+  });
+</script>
 </body>
 
 </html>
